@@ -16,4 +16,4 @@ val universe: 440,875 S1 entities
 
   BEST tau=0.2 delta=0.35  macro-F_0.5 = 0.847028
   without one-to-one resolution: 0.845223  (delta +0.001806)
-  saved /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/model/decision.json
+  saved data/model/decision.json

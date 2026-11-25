@@ -31,4 +31,4 @@ feature pairs available 4,267,885; sampling 1.000 -> ~4,267,885
   a_lev                  0.39%
   blk_score              0.39%
 
-  saved /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/model/lgbm.txt
+  saved data/model/lgbm.txt

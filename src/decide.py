@@ -13,7 +13,7 @@ the validation split, then applies:
   across 7,638,365 GT pairs. A contested S2/S3 id goes to the highest-scoring S1 and is
   dropped elsewhere. Pure precision gain at zero recall cost.
 
-Submissions are written with `quote_style="never"` per CLAUDE.md.
+Submissions are written with `quote_style="never"` (see docs/REPRODUCE.md, section 3.4).
 
 Usage:
     python src/decide.py --sweep --feat-glob 'data/features/train_val_part*.parquet'
@@ -143,7 +143,7 @@ def main() -> int:
         sub = to_submission(pred, universe)
         out_dir = resolve(args.out); out_dir.mkdir(parents=True, exist_ok=True)
         # quote_style="never": polars would otherwise write "" for empty singleton rows,
-        # which the scorer reads back as a literal two-character id. See CLAUDE.md.
+        # which the scorer reads back as a literal two-character id. See docs/REPRODUCE.md, section 3.4.
         sub.write_csv(out_dir / "matching_results.tsv", separator="\t", quote_style="never")
 
         cand = pl.read_parquet(resolve(args.cand_dir) / f"{args.split}_reranked_cap{args.cap}.parquet")

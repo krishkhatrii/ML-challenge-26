@@ -1,4 +1,4 @@
-features: split=train fold=train s1_frac=0.1 -> /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/features/train_train_*
+features: split=train fold=train s1_frac=0.1 -> data/features/train_train_*
   idf maps: 1,420,832 name / 647,619 addr tokens  (3s)
   fold=train s1_frac=0.1: 176,194 S1 entities selected
   chunk   1/22     214,047 pairs       15s cumulative

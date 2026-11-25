@@ -1,16 +1,14 @@
 # Pipeline plan
 
-Stage-by-stage design. Read the section for the stage you are building.
-When a stage is done, replace its section with what was actually implemented.
-
-Constraints live in `CLAUDE.md` and always apply.
+Stage-by-stage design notes from the hackathon. Sections marked DONE describe what was
+actually implemented.
 
 ---
 
 ## Build order
 
 1. `src/convert.py` — TSV -> Parquet, all 7 files. **DONE.**
-2. `src/recon.py` — data understanding. **DONE** — findings below and in `NOTES.md`.
+2. `src/recon.py` — data understanding. **DONE** — findings below and in `docs/NOTES.md`.
 3. `src/scoring.py` — macro-F_0.5 + S1-entity-grouped train/val split. **DONE.**
 4. `src/shard.py` — the 5% dev shard. **DONE.**
 5. `src/normalize.py`
@@ -55,7 +53,7 @@ Measured: full 2.3 GB -> 975 MB Parquet in **6.9 s** locally. Fast enough that t
 
 ## Stage 2 — Recon (`src/recon.py`) — BUILT
 
-DuckDB over the Parquet; 8 sections printed and appended to `NOTES.md`. Numbers below
+DuckDB over the Parquet; 8 sections printed and appended to `docs/NOTES.md`. Numbers below
 are from the **full dataset**, reconfirmed locally (the 50k `dataset_sample/` agrees to
 within 0.1pp on every rate).
 

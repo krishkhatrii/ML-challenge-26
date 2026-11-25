@@ -2,8 +2,8 @@
 CANDIDATE GENERATION — train   cap=30
   pair blocks df<=5,000 K=8 | single df<=1000 | composite df<=20,000 K=4
 ====================================================================================
-  normalized  /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/normalized
-  out         /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/cand_exp
+  normalized  data/normalized
+  out         data/cand_exp
   design      ADDRESS-FIRST (names are template-generated; see module notes)
 
   S1 restricted to data/eval_ids.parquet

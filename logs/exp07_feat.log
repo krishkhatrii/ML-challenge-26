@@ -1,4 +1,4 @@
-features: split=test fold=all s1_frac=1.0 -> /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/features_test_exp07/test_all_*
+features: split=test fold=all s1_frac=1.0 -> data/features_test_exp07/test_all_*
   idf maps: 1,187,473 name / 662,024 addr tokens  (3s)
   chunk   1/17   2,874,463 pairs      116s cumulative
   chunk   2/17   2,874,433 pairs      228s cumulative

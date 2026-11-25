@@ -1,4 +1,4 @@
 scored 48,959,160 pairs over 1,732,275 S1 entities
 applying tau=0.25 delta=0.35
   1,732,544 rows, 1,714,478 with >=1 match (99.0%), 5,372,239 matched ids
-  wrote /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/stage/exp07/matching_results.tsv and /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/stage/exp07/candidate_pairs.tsv
+  wrote stage/exp07/matching_results.tsv and stage/exp07/candidate_pairs.tsv

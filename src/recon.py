@@ -10,14 +10,14 @@ The two numbers that change the pipeline design:
 * whether an S2/S3 ID is ever claimed by **two** S1 entities (section 3). If it
   never is, a one-to-one constraint holds and stage 9 gets a free precision win.
 
-Output is printed and appended to ``NOTES.md`` under a ``## Recon`` heading.
+Output is printed and appended to ``docs/NOTES.md`` under a ``## Recon`` heading.
 
 Usage:
     python src/recon.py
 
 Env:
     PARQUET_DIR   directory holding the Parquet files   (default: data/parquet)
-    NOTES         report destination                    (default: NOTES.md)
+    NOTES         report destination                    (default: docs/NOTES.md)
     SAMPLE_SEED   seed for the random-row sample        (default: 42)
 """
 
@@ -76,7 +76,7 @@ def resolve(p: str) -> Path:
 
 
 class Report:
-    """Collects every line so stdout and the NOTES.md append cannot drift apart."""
+    """Collects every line so stdout and the docs/NOTES.md append cannot drift apart."""
 
     def __init__(self) -> None:
         self.lines: list[str] = []
@@ -416,7 +416,7 @@ def random_rows(con, r: Report, seed: int) -> None:
 
 def main() -> int:
     parquet_dir = resolve(os.environ.get("PARQUET_DIR", "data/parquet"))
-    notes_path = resolve(os.environ.get("NOTES", "NOTES.md"))
+    notes_path = resolve(os.environ.get("NOTES", "docs/NOTES.md"))
     seed = int(os.environ.get("SAMPLE_SEED", "42"))
 
     con = connect(parquet_dir)

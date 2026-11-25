@@ -133,7 +133,7 @@ recall at all (Exp 0). And `PARQUET_DIR` defaults to `data/parquet`, the 50k-row
 **sample** — the first run silently measured recall against 172,727 sample GT pairs
 instead of 7,638,365. It agreed to within 0.03pp (84.98% capped, 89.21% uncapped), which
 is reassuring about the sample but means every run in this log must set
-`PARQUET_DIR=data/parquet_full` explicitly. The baseline numbers in `NOTES.md` were
+`PARQUET_DIR=data/parquet_full` explicitly. The baseline numbers in `docs/NOTES.md` were
 produced with it set.
 
 ### Exp 1b — pricing each lever against the 831,258 misses
@@ -217,7 +217,7 @@ fits the 45-minute box with room for a slower blocking stage.
 
 ### Baseline re-anchored under this protocol
 
-| | NOTES.md baseline | this protocol |
+| | docs/NOTES.md baseline | this protocol |
 |---|---|---|
 | train pairs | 5,016,119 | 4,267,885 |
 | CV AUC | 0.998527 | 0.998501 |
@@ -276,8 +276,8 @@ them recovers pairs no other block can see.
 4. **CV AUC went up while F_0.5 went down** (0.998501 -> 0.998670, val
    0.847028 -> 0.846530). The new pairs are mostly *easy* negatives — they share one
    common token and nothing else — so they inflate AUC by padding the trivially-separable
-   mass while the hard decision at the top of each shortlist gets no better. Exactly the
-   reason CLAUDE.md says to tune against macro-F_0.5 and never against AUC. Worth
+   mass while the hard decision at the top of each shortlist gets no better. This is exactly why
+   we tune against macro-F_0.5 and never against AUC. Worth
    remembering as evidence, not just as a rule.
 
 **Cost:** 29 min end to end (cand 330s, rerank 162s, feat 791s, train 426s, sweep ~130s).
