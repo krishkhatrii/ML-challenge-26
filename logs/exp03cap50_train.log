@@ -1,0 +1,34 @@
+feature pairs available 6,478,283; sampling 0.772 -> ~5,000,000
+  loaded 5,121,437 pairs, 531,602 positives (10.38%), 35 features, 3s
+  fold 1: AUC 0.99899  best_iter 600
+  fold 2: AUC 0.99902  best_iter 600
+  fold 3: AUC 0.99900  best_iter 600
+  fold 4: AUC 0.99897  best_iter 600
+
+  CV AUC  mean 0.99899  std 0.00002
+  OOF AUC 0.99899
+
+  feature               gain %
+  ----------------------------
+  jac_idf               32.90%
+  c_rank                24.20%
+  jac_plain              8.63%
+  a_numov                6.97%
+  c_ratio_mean           5.00%
+  n_ngcos                3.56%
+  a_tset                 3.02%
+  n_tsort                2.25%
+  n_jw                   1.94%
+  n_tset                 1.78%
+  a_numboth              1.21%
+  c_gap_best             1.06%
+  n_lev                  1.00%
+  n_idfov                0.92%
+  a_jw                   0.71%
+  a_numfirst             0.61%
+  a_ngcos                0.60%
+  a_tsort                0.42%
+  blk_score              0.35%
+  m_script_match         0.34%
+
+  saved /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/model/lgbm.txt

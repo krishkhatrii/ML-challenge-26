@@ -1,0 +1,21 @@
+=== exp03cap50  cap=50 max_pairs=5000000  22:23:32Z ===
+  PARQUET_DIR=data/parquet_full  CAND_DIR=data/cand_exp  S1_IDS=data/eval_ids.parquet
+--- cand  22:23:32Z
+    cand rc=1  106s  free=62GB
+--- rerank  22:25:18Z
+    rerank rc=0  117s  free=61GB
+--- feat_tr  22:27:15Z
+    feat_tr rc=0  326s  free=62GB
+--- feat_val  22:32:41Z
+    feat_val rc=0  745s  free=61GB
+--- train  22:45:06Z
+    train rc=0  433s  free=61GB
+--- sweep  22:52:19Z
+    sweep rc=0  189s  free=61GB
+
+=== exp03cap50 done  22:55:28Z ===
+GATE (>= 97% overall recall at cap 50): FAIL — 86.14%
+  WINNER at cap 50: jaccard IDF-weighted  (87.19%)
+  CV AUC  mean 0.99899  std 0.00002
+  BEST tau=0.3 delta=0.35  macro-F_0.5 = 0.846777
+DRIVER_EXIT=0

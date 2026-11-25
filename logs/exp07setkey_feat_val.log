@@ -1,0 +1,26 @@
+features: split=train fold=val s1_frac=1.0 -> /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/features/train_val_*
+  idf maps: 1,420,832 name / 647,619 addr tokens  (3s)
+  fold=val s1_frac=1.0: 440,875 S1 entities selected
+  chunk   1/22     534,275 pairs       28s cumulative
+  chunk   2/22     538,403 pairs       51s cumulative
+  chunk   3/22     535,880 pairs       73s cumulative
+  chunk   4/22     527,187 pairs       95s cumulative
+  chunk   5/22     529,289 pairs      117s cumulative
+  chunk   6/22     535,356 pairs      140s cumulative
+  chunk   7/22     536,798 pairs      165s cumulative
+  chunk   8/22     542,558 pairs      191s cumulative
+  chunk   9/22     532,428 pairs      213s cumulative
+  chunk  10/22     536,376 pairs      235s cumulative
+  chunk  11/22     538,720 pairs      257s cumulative
+  chunk  12/22     532,619 pairs      279s cumulative
+  chunk  13/22     542,731 pairs      301s cumulative
+  chunk  14/22     535,258 pairs      323s cumulative
+  chunk  15/22     539,697 pairs      346s cumulative
+  chunk  16/22     530,724 pairs      368s cumulative
+  chunk  17/22     534,658 pairs      390s cumulative
+  chunk  18/22     536,207 pairs      412s cumulative
+  chunk  19/22     545,984 pairs      434s cumulative
+  chunk  20/22     538,274 pairs      456s cumulative
+  chunk  21/22     532,553 pairs      478s cumulative
+  chunk  22/22     531,577 pairs      500s cumulative
+  DONE 11,787,552 pairs in 22 parts, 500s

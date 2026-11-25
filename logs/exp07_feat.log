@@ -1,0 +1,20 @@
+features: split=test fold=all s1_frac=1.0 -> /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/features_test_exp07/test_all_*
+  idf maps: 1,187,473 name / 662,024 addr tokens  (3s)
+  chunk   1/17   2,874,463 pairs      116s cumulative
+  chunk   2/17   2,874,433 pairs      228s cumulative
+  chunk   3/17   2,865,657 pairs      341s cumulative
+  chunk   4/17   2,876,028 pairs      454s cumulative
+  chunk   5/17   2,867,918 pairs      575s cumulative
+  chunk   6/17   2,898,929 pairs      692s cumulative
+  chunk   7/17   2,882,784 pairs      805s cumulative
+  chunk   8/17   2,892,067 pairs      919s cumulative
+  chunk   9/17   2,899,232 pairs     1032s cumulative
+  chunk  10/17   2,883,171 pairs     1148s cumulative
+  chunk  11/17   2,887,384 pairs     1265s cumulative
+  chunk  12/17   2,891,995 pairs     1379s cumulative
+  chunk  13/17   2,865,570 pairs     1492s cumulative
+  chunk  14/17   2,880,198 pairs     1609s cumulative
+  chunk  15/17   2,884,764 pairs     1724s cumulative
+  chunk  16/17   2,862,007 pairs     1836s cumulative
+  chunk  17/17   2,872,560 pairs     1949s cumulative
+  DONE 48,959,160 pairs in 17 parts, 1950s

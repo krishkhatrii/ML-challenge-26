@@ -1,0 +1,10 @@
+====================================================================================
+JACCARD RE-RANK — test
+====================================================================================
+  [token sets + IDF] ...
+  [token sets + IDF] 5.2s   rss now 2.6 GB
+  [jaccard variants (8 partitions)] ...
+  [jaccard variants (8 partitions)] 236.0s   rss now 7.4 GB
+
+  no ground truth for test; applying the train winner: jaccard IDF-weighted
+  wrote test_reranked_cap30.parquet (875.6 MB) in 269s, peak RSS 7.6 GB

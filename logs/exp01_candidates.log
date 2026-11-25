@@ -1,0 +1,98 @@
+====================================================================================
+CANDIDATE GENERATION — train   cap=30
+  pair blocks df<=5,000 K=8 | single df<=200 | composite df<=20,000 K=4
+====================================================================================
+  normalized  /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/normalized
+  out         /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/cand
+  design      ADDRESS-FIRST (names are template-generated; see module notes)
+
+  S1 2,206,821   S2+S3 10,320,219
+
+  [token tables + DF] ...
+  [token tables + DF] 9.0s   rss now 3.1 GB
+  [rarest-token tables] ...
+  [rarest-token tables] 17.1s   rss now 3.2 GB
+  [B1 postcode exact] ...
+  [B1 postcode exact] 0.6s   rss now 3.2 GB
+  [B2 street-number + rare addr token] ...
+  [B2 street-number + rare addr token] 44.3s   rss now 3.6 GB
+  [B3_addr_pair] ...
+  [B3_addr_pair] 34.2s   rss now 3.7 GB
+  [B4_name_pair] ...
+  [B4_name_pair] 3.4s   rss now 3.7 GB
+  [B5_addr_single (df<=200)] ...
+  [B5_addr_single (df<=200)] 12.2s   rss now 4.4 GB
+  [B6_name_single (df<=200)] ...
+  [B6_name_single (df<=200)] 11.2s   rss now 4.8 GB
+  [B7 addr-token x name-token composite] ...
+  [B7 addr-token x name-token composite] 19.1s   rss now 4.8 GB
+  [union + score + rank (8 partitions)] ...
+  [union + score + rank (8 partitions)] 328.9s   rss now 5.5 GB
+  [recall vs ground truth] ...
+  [recall vs ground truth] 7.2s   rss now 5.5 GB
+
+------------------------------------------------------------------------------------
+BLOCK SIZES AND PER-BLOCK RECALL (uncapped — where the recall comes from)
+------------------------------------------------------------------------------------
+  block                            pairs   GT pairs found    recall
+  -----------------------------------------------------------------
+  B1_postcode                  7,196,072            8,665     5.02%
+  B2_number_addrtok          101,710,279          105,207    60.91%
+  B3_addr_pair               115,209,674           73,326    42.45%
+  B4_name_pair                11,101,070           37,212    21.54%
+  B5_addr_single              72,669,297           60,450    35.00%
+  B6_name_single              68,710,486           48,720    28.21%
+  B7_addr_x_name              33,546,509          111,970    64.82%
+  -----------------------------------------------------------------
+  UNION (uncapped)           373,476,010          154,095    89.21%
+
+------------------------------------------------------------------------------------
+RECALL BY CANDIDATE CAP
+------------------------------------------------------------------------------------
+     cap      candidates      GT found    recall   mean/S1   p99/S1   zero-cand S1
+  ------------------------------------------------------------------------------
+      10      20,244,080       139,902    81.00%       9.4       10    48,698 2.2%
+      20      37,726,822       144,599    83.72%      17.5       20    48,698 2.2%
+      30      53,407,324       146,778    84.98%      24.7       30    48,698 2.2%
+      50      81,067,052       148,779    86.14%      37.6       50    48,698 2.2%
+
+------------------------------------------------------------------------------------
+PER-SCRIPT RECALL (script of the matched S2/S3 record)   cap=30
+------------------------------------------------------------------------------------
+  script                GT pairs    uncapped      capped
+  ----------------------------------------------------
+  Latin                  160,152      90.15%      86.27%
+  devanagari               7,083      74.88%      66.05%
+  telugu                   1,058      79.87%      70.42%
+  tamil                      932      78.86%      69.21%
+  kannada                    884      73.30%      68.67%
+  bengali                    880      81.59%      71.59%
+  gujarati                   846      81.56%      73.40%
+  malayalam                  493      86.41%      79.72%
+  gurmukhi                   210      92.38%      76.67%
+  oriya                      189      84.13%      69.31%
+
+------------------------------------------------------------------------------------
+PER-COUNTRY RECALL (country of the S1 record)   cap=30
+------------------------------------------------------------------------------------
+  country               GT pairs    uncapped      capped
+  ----------------------------------------------------
+  US                     103,033      90.15%      87.23%
+  India                   69,694      87.83%      81.65%
+
+------------------------------------------------------------------------------------
+COST
+------------------------------------------------------------------------------------
+  full cross product        22,774,876,013,799
+  candidates kept (cap 30)   53,407,324
+  reduction ratio           0.9999976550
+  pairs per S1 (mean)       24.2
+  wall clock                487.3s
+  peak RSS                  5.5 GB
+
+  wrote train_candidates_cap30.parquet  (463.0 MB)
+
+====================================================================================
+GATE (>= 97% overall recall at cap 30): FAIL — 84.98%
+====================================================================================
+EXIT=1

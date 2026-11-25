@@ -1,0 +1,867 @@
+building GT pair table ...
+anti-joining against the uncapped union ...
+
+GT pairs 7,638,365   uncapped-union misses 831,258  (10.88%)
+
+==========================================================================================
+A. MISS STRUCTURE — do the two records share any token at all?
+==========================================================================================
+  name tokens shared    0: 26.8%  1: 16.8%  2: 35.7%  3+: 20.7%
+  addr tokens shared    0: 23.8%  1:  7.8%  2: 15.6%  3+: 52.8%
+  share NOTHING at all  1,660 / 831,258  (0.20%)
+  share a street number 431,975  (51.97%)
+  postcode equal        0   both-present 3,157 / 831,258
+
+==========================================================================================
+B. DF OF THE RAREST SHARED TOKEN (why the df caps missed it)
+==========================================================================================
+  rarest shared name token DF:
+      none shared      223,720   26.9%
+      <=200                  0    0.0%
+      201-1k            76,970    9.3%
+      1k-5k             92,621   11.1%
+      5k-20k           152,543   18.4%
+      20k-100k         279,333   33.6%
+      >100k              6,071    0.7%
+  rarest shared addr token DF:
+      none shared      197,431   23.8%
+      <=200                  0    0.0%
+      201-1k            44,677    5.4%
+      1k-5k             68,643    8.3%
+      5k-20k           198,505   23.9%
+      20k-100k         192,989   23.2%
+      >100k            129,013   15.5%
+
+==========================================================================================
+C. WOULD A WIDER SINGLE-TOKEN CAP REACH THEM? (cumulative recoverable share)
+==========================================================================================
+  single shared token df<=200     would reach            0 of 831,258 misses  (  0.0%)  -> +0.00pp on GT recall
+  single shared token df<=1,000   would reach      121,600 of 831,258 misses  ( 14.6%)  -> +1.59pp on GT recall
+  single shared token df<=5,000   would reach      282,504 of 831,258 misses  ( 34.0%)  -> +3.70pp on GT recall
+  single shared token df<=20,000  would reach      625,710 of 831,258 misses  ( 75.3%)  -> +8.19pp on GT recall
+  single shared token df<=100,000 would reach      789,631 of 831,258 misses  ( 95.0%)  -> +10.34pp on GT recall
+
+==========================================================================================
+D. MISSES BY COUNTRY AND SCRIPT (share of that stratum's GT lost)
+==========================================================================================
+  by country:
+      US               4,578,522 GT      457,300 missed   9.99%
+      India            3,059,843 GT      373,958 missed  12.22%
+  by scr:
+      Latin            7,087,125 GT      704,884 missed   9.95%
+      devanagari         312,725 GT       76,888 missed  24.59%
+      telugu              45,620 GT       10,474 missed  22.96%
+      kannada             43,379 GT       11,837 missed  27.29%
+      tamil               39,252 GT        8,059 missed  20.53%
+      bengali             35,910 GT        6,159 missed  17.15%
+      gujarati            35,819 GT        7,318 missed  20.43%
+      malayalam           21,930 GT        3,176 missed  14.48%
+      oriya                8,681 GT        1,407 missed  16.21%
+      gurmukhi             7,924 GT        1,056 missed  13.33%
+
+==========================================================================================
+E. 50 SAMPLED MISSES, IN FULL
+==========================================================================================
+
+--- miss  1 ---  S1-345470882  vs  S2-297750407   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Surgical Metro Physicians'
+      name norm: 'surgical metro physicians'
+      name tok : ['surgical', 'metro', 'physicians']
+      addr raw : '5441 W Mount Drive, Nashville, NC'
+      addr norm: '5441 mount drive nashville nc'
+      addr tok : ['mount', 'drive', 'nashville', 'nc']   num=['5441'] pc=''
+  S23 name raw : 'Surgical Metro  Physicians'
+      name norm: 'surgical metro physicians'
+      name tok : ['surgical', 'metro', 'physicians']
+      addr raw : '5441 1/2 WEST MOUNT DR, NASHVILLE, NC'
+      addr norm: '5441 1 2 west mount drive nashville nc'
+      addr tok : ['west', 'mount', 'drive', 'nashville', 'nc']   num=['5441', '1/2'] pc=''
+  SHARED name tokens: ['metro', 'physicians', 'surgical']
+  SHARED addr tokens: ['drive', 'mount', 'nashville', 'nc']
+
+--- miss  2 ---  S1-48958307  vs  S2-252821145   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Pacific Foundation, LLC'
+      name norm: 'pacific foundation llc'
+      name tok : ['pacific', 'foundation']
+      addr raw : '4901 5th Street, Columbia Heights, MN'
+      addr norm: '4901 5th street columbia heights mn'
+      addr tok : ['5th', 'street', 'columbia', 'heights', 'mn']   num=['4901'] pc=''
+  S23 name raw : 'PACIFICFOUNDATION.COM'
+      name norm: 'pacificfoundation com'
+      name tok : ['pacificfoundation', 'com']
+      addr raw : 'FIFTH STREET, COLUMBIA HEIGHTS, MN'
+      addr norm: 'fifth street columbia heights mn'
+      addr tok : ['fifth', 'street', 'columbia', 'heights', 'mn']   num=[] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['columbia', 'heights', 'mn', 'street']
+
+--- miss  3 ---  S1-559697248  vs  S2-32461760   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Orthopedic Medicine'
+      name norm: 'orthopedic medicine'
+      name tok : ['orthopedic', 'medicine']
+      addr raw : '2368 Cable Avenue, Memphis, TN'
+      addr norm: '2368 cable avenue memphis tn'
+      addr tok : ['cable', 'avenue', 'memphis', 'tn']   num=['2368'] pc=''
+  S23 name raw : 'Orthopedic Medicine Ltd'
+      name norm: 'orthopedic medicine ltd'
+      name tok : ['orthopedic', 'medicine']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['medicine', 'orthopedic']
+  SHARED addr tokens: NONE
+
+--- miss  4 ---  S1-169761955  vs  S2-626296293   [India / India]  scripts name latin|kannada  addr latin|kannada
+  S1  name raw : 'Maa Finance LLP'
+      name norm: 'maa finance llp'
+      name tok : ['maa', 'finance']
+      addr raw : 'No 23, 8Th Main Road Vasanthanagar, Bangalore, Karnataka'
+      addr norm: 'no 23 8th main road vasanthanagar bangalore karnataka'
+      addr tok : ['no', '8th', 'main', 'road', 'vasanthanagar', 'bangalore', 'karnataka']   num=['23'] pc=''
+  S23 name raw : 'ಮಾ ಫೈನಾನ್ಸ್ ಎಲ್ಎಲ್\u200cಪಿ'
+      name norm: 'ma phainans elelpi'
+      name tok : ['ma', 'phainans', 'elelpi']
+      addr raw : 'NO 23, BENGALURU, BANGALORE, ಕರ್ನಾಟಕ'
+      addr norm: 'no 23 bengaluru bangalore karnatak'
+      addr tok : ['no', 'bengaluru', 'bangalore', 'karnatak']   num=['23'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['bangalore', 'no']
+
+--- miss  5 ---  S1-557263358  vs  S2-690932918   [India / India]  scripts name latin|devanagari  addr latin|latin
+  S1  name raw : 'Life Developers'
+      name norm: 'life developers'
+      name tok : ['life', 'developers']
+      addr raw : '523, Tower B-4, Spaze I-Tech Park, Sector-49, Sohna Road, Gurgaon, Haryana'
+      addr norm: '523 tower 4 spaze tech park sector 49 sohna road gurgaon haryana'
+      addr tok : ['tower', 'spaze', 'tech', 'park', 'sector', 'sohna', 'road', 'gurgaon', 'haryana']   num=['523', '4', '49'] pc=''
+  S23 name raw : 'लाइफ डेवलपर्स'
+      name norm: 'laiph devalapars'
+      name tok : ['laiph', 'devalapars']
+      addr raw : '523, GURGAON, Haryana'
+      addr norm: '523 gurgaon haryana'
+      addr tok : ['gurgaon', 'haryana']   num=['523'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['gurgaon', 'haryana']
+
+--- miss  6 ---  S1-708694647  vs  S2-388409734   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Ear Nose & Throat Midwest Group'
+      name norm: 'ear nose and throat midwest group'
+      name tok : ['ear', 'nose', 'and', 'throat', 'midwest', 'group']
+      addr raw : '30404 Sawyer Way, Gold Beach, OR'
+      addr norm: '30404 sawyer way gold beach or'
+      addr tok : ['sawyer', 'way', 'gold', 'beach', 'or']   num=['30404'] pc='30404'
+  S23 name raw : 'EAR NOSE AND  THROAT MIDWEST GROUP'
+      name norm: 'ear nose and throat midwest group'
+      name tok : ['ear', 'nose', 'and', 'throat', 'midwest', 'group']
+      addr raw : 'Sawyer Way, GOLD BEACH, OR'
+      addr norm: 'sawyer way gold beach or'
+      addr tok : ['sawyer', 'way', 'gold', 'beach', 'or']   num=[] pc=''
+  SHARED name tokens: ['and', 'ear', 'group', 'midwest', 'nose', 'throat']
+  SHARED addr tokens: ['beach', 'gold', 'or', 'sawyer', 'way']
+
+--- miss  7 ---  S1-59941731  vs  S2-891887552   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Foot & Ankle Partners LLC'
+      name norm: 'foot and ankle partners llc'
+      name tok : ['foot', 'and', 'ankle', 'partners']
+      addr raw : '1223 Reston Avenue, Fairfax County, VA'
+      addr norm: '1223 reston avenue fairfax county va'
+      addr tok : ['reston', 'avenue', 'fairfax', 'county', 'va']   num=['1223'] pc=''
+  S23 name raw : 'FOOT & ANKLE PARTNERS LLC'
+      name norm: 'foot and ankle partners llc'
+      name tok : ['foot', 'and', 'ankle', 'partners']
+      addr raw : '1223-1225 RESTON AVENUE, HERNDON, VA'
+      addr norm: '1223 1225 reston avenue herndon va'
+      addr tok : ['reston', 'avenue', 'herndon', 'va']   num=['1223-1225'] pc=''
+  SHARED name tokens: ['and', 'ankle', 'foot', 'partners']
+  SHARED addr tokens: ['avenue', 'reston', 'va']
+
+--- miss  8 ---  S1-640267988  vs  S2-363796578   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Dermatology Partners'
+      name norm: 'dermatology partners'
+      name tok : ['dermatology', 'partners']
+      addr raw : '808 Saffira Way, Mckinney, TX'
+      addr norm: '808 saffira way mckinney tx'
+      addr tok : ['saffira', 'way', 'mckinney', 'tx']   num=['808'] pc=''
+  S23 name raw : 'Dermatology Partners [Có]'
+      name norm: 'dermatology partners co'
+      name tok : ['dermatology', 'partners']
+      addr raw : '808 SAFFRIA WAY, MCKINNEY, TX'
+      addr norm: '808 saffria way mckinney tx'
+      addr tok : ['saffria', 'way', 'mckinney', 'tx']   num=['808'] pc=''
+  SHARED name tokens: ['dermatology', 'partners']
+  SHARED addr tokens: ['mckinney', 'tx', 'way']
+
+--- miss  9 ---  S1-686172340  vs  S2-18955900   [India / India]  scripts name latin|devanagari  addr latin|latin
+  S1  name raw : 'Future Hotel Finance'
+      name norm: 'future hotel finance'
+      name tok : ['future', 'hotel', 'finance']
+      addr raw : 'H. No. 0443/0002, Flat No. 102, Laxmi Icon, Thane, Maharashtra'
+      addr norm: 'no 0443 0002 flat no 102 laxmi icon thane maharashtra'
+      addr tok : ['no', 'flat', 'no', 'laxmi', 'icon', 'thane', 'maharashtra']   num=['0443/0002', '102'] pc=''
+  S23 name raw : 'फ्यूचर होटल फाइनेंस'
+      name norm: 'phyuchar hotal phainens'
+      name tok : ['phyuchar', 'hotal', 'phainens']
+      addr raw : 'H. NO. 0443/0002., THANE, Maharashtra'
+      addr norm: 'no 0443 0002 thane maharashtra'
+      addr tok : ['no', 'thane', 'maharashtra']   num=['0443/0002'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['maharashtra', 'no', 'thane']
+
+--- miss 10 ---  S1-298827987  vs  S2-113541873   [India / India]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Alfa Services Pvt. Ltd.'
+      name norm: 'alfa services pvt ltd'
+      name tok : ['alfa', 'services']
+      addr raw : 'H No 7-20, Madhurapuri Colony Asmangadh, Hyderabad, Rangareddy, Telangana'
+      addr norm: 'no 7 20 madhurapuri colony asmangadh hyderabad rangareddy telangana'
+      addr tok : ['no', 'madhurapuri', 'colony', 'asmangadh', 'hyderabad', 'rangareddy', 'telangana']   num=['7-20'] pc=''
+  S23 name raw : 'Alfa  Services Pvt. Ltd.'
+      name norm: 'alfa services pvt ltd'
+      name tok : ['alfa', 'services']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['alfa', 'services']
+  SHARED addr tokens: NONE
+
+--- miss 11 ---  S1-93188215  vs  S2-337839450   [India / India]  scripts name latin|devanagari  addr latin|latin
+  S1  name raw : 'Surya Marketing Private Limited'
+      name norm: 'surya marketing pvt ltd'
+      name tok : ['surya', 'marketing']
+      addr raw : 'Shop No 13, 2Nd Floor Trade Centre Building, Kolhapur, Maharashtra'
+      addr norm: 'shop no 13 2nd floor trade centre building kolhapur maharashtra'
+      addr tok : ['shop', 'no', '2nd', 'floor', 'trade', 'centre', 'building', 'kolhapur', 'maharashtra']   num=['13'] pc=''
+  S23 name raw : 'सूर्य मार्केटिंग प्राइवेट लिमिटेड'
+      name norm: 'sury marketing praivet ltd'
+      name tok : ['sury', 'marketing', 'praivet']
+      addr raw : 'SHOP NO 13, 2ND FLOOR TRADE CENTRE BUILDING, KOLHAPUR, Maharashtra'
+      addr norm: 'shop no 13 2nd floor trade centre building kolhapur maharashtra'
+      addr tok : ['shop', 'no', '2nd', 'floor', 'trade', 'centre', 'building', 'kolhapur', 'maharashtra']   num=['13'] pc=''
+  SHARED name tokens: ['marketing']
+  SHARED addr tokens: ['2nd', 'building', 'centre', 'floor', 'kolhapur', 'maharashtra', 'no', 'shop', 'trade']
+
+--- miss 12 ---  S1-647572945  vs  S2-139046362   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Surgical Partners, Inc'
+      name norm: 'surgical partners inc'
+      name tok : ['surgical', 'partners']
+      addr raw : '350 Sylvia Street, West Lafayette, IN'
+      addr norm: '350 sylvia street west lafayette in'
+      addr tok : ['sylvia', 'street', 'west', 'lafayette', 'in']   num=['350'] pc=''
+  S23 name raw : 'Surgical  Partners,'
+      name norm: 'surgical partners'
+      name tok : ['surgical', 'partners']
+      addr raw : 'SYLVIA STREET, WEST LAFAYETTE, IN'
+      addr norm: 'sylvia street west lafayette in'
+      addr tok : ['sylvia', 'street', 'west', 'lafayette', 'in']   num=[] pc=''
+  SHARED name tokens: ['partners', 'surgical']
+  SHARED addr tokens: ['in', 'lafayette', 'street', 'sylvia', 'west']
+
+--- miss 13 ---  S1-197320764  vs  S2-338571321   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'L/A Block LLC'
+      name norm: 'block llc'
+      name tok : ['block']
+      addr raw : 'IA, 404 Park Street, Creston'
+      addr norm: 'ia 404 park street creston'
+      addr tok : ['ia', 'park', 'street', 'creston']   num=['404'] pc=''
+  S23 name raw : 'L/A Block'
+      name norm: 'block'
+      name tok : ['block']
+      addr raw : 'Park St, CRESTTON, IA'
+      addr norm: 'park street crestton ia'
+      addr tok : ['park', 'street', 'crestton', 'ia']   num=[] pc=''
+  SHARED name tokens: ['block']
+  SHARED addr tokens: ['ia', 'park', 'street']
+
+--- miss 14 ---  S1-922135207  vs  S2-428604792   [India / India]  scripts name latin|latin  addr latin|bengali
+  S1  name raw : 'Innovative High Developers Pvt Ltd'
+      name norm: 'innovative high developers pvt ltd'
+      name tok : ['innovative', 'high', 'developers']
+      addr raw : '162/1/H/9, B. B. Ganguly Street, Kolkata, Kolkata, Howrah, West Bengal'
+      addr norm: '162 1 9 ganguly street kolkata kolkata howrah west bengal'
+      addr tok : ['ganguly', 'street', 'kolkata', 'kolkata', 'howrah', 'west', 'bengal']   num=['162/1', '9'] pc=''
+  S23 name raw : 'Innovative Hgh Developers Pvt Ltd'
+      name norm: 'innovative hgh developers pvt ltd'
+      name tok : ['innovative', 'hgh', 'developers']
+      addr raw : '162/1/H/9, B. B. GANEULY STREET, KOLKATA, KOLKATA, পশ্চিমবঙ্গ'
+      addr norm: '162 1 9 ganeuly street kolkata kolkata pashchimavang'
+      addr tok : ['ganeuly', 'street', 'kolkata', 'kolkata', 'pashchimavang']   num=['162/1', '9'] pc=''
+  SHARED name tokens: ['developers', 'innovative']
+  SHARED addr tokens: ['kolkata', 'street']
+
+--- miss 15 ---  S1-518203122  vs  S2-184688591   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Integrated Media Inc'
+      name norm: 'integrated media inc'
+      name tok : ['integrated', 'media']
+      addr raw : '1401 96th Street, Bloomington, MN'
+      addr norm: '1401 96th street bloomington mn'
+      addr tok : ['96th', 'street', 'bloomington', 'mn']   num=['1401'] pc=''
+  S23 name raw : 'THE INTEGRATED MEDIA INC'
+      name norm: 'the integrated media inc'
+      name tok : ['the', 'integrated', 'media']
+      addr raw : '##1401 96ND ST, BLOOMINGTON, MN'
+      addr norm: '1401 96nd street bloomington mn'
+      addr tok : ['96nd', 'street', 'bloomington', 'mn']   num=['1401'] pc=''
+  SHARED name tokens: ['integrated', 'media']
+  SHARED addr tokens: ['bloomington', 'mn', 'street']
+
+--- miss 16 ---  S1-191959498  vs  S2-91029500   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Atlantic Trust'
+      name norm: 'atlantic trust'
+      name tok : ['atlantic', 'trust']
+      addr raw : 'NC, 303 Park Avenue, Raleigh, Unit G'
+      addr norm: 'nc 303 park avenue raleigh unit'
+      addr tok : ['nc', 'park', 'avenue', 'raleigh', 'unit']   num=['303'] pc=''
+  S23 name raw : 'Atlantic Trust Corporation'
+      name norm: 'atlantic trust corp'
+      name tok : ['atlantic', 'trust']
+      addr raw : '303 PARK AVE, RALEIGH, NC'
+      addr norm: '303 park avenue raleigh nc'
+      addr tok : ['park', 'avenue', 'raleigh', 'nc']   num=['303'] pc=''
+  SHARED name tokens: ['atlantic', 'trust']
+  SHARED addr tokens: ['avenue', 'nc', 'park', 'raleigh']
+
+--- miss 17 ---  S1-558521849  vs  S2-713235203   [India / India]  scripts name latin|devanagari  addr latin|latin
+  S1  name raw : 'Eastern Media Private Limited'
+      name norm: 'eastern media pvt ltd'
+      name tok : ['eastern', 'media']
+      addr raw : '922, Hemkunt Chamber, 89 Nehru Place, New Delhi, South Delhi, Delhi'
+      addr norm: '922 hemkunt chamber 89 nehru place new delhi south delhi delhi'
+      addr tok : ['hemkunt', 'chamber', 'nehru', 'place', 'new', 'delhi', 'south', 'delhi', 'delhi']   num=['922', '89'] pc=''
+  S23 name raw : 'ईस्टर्न मीडिया प्राइवेट लिमिटेड'
+      name norm: 'istarn midiy praivet ltd'
+      name tok : ['istarn', 'midiy', 'praivet']
+      addr raw : 'G-922, NEW DELHI, SOUTH DELHI, Delhi'
+      addr norm: '922 new delhi south delhi delhi'
+      addr tok : ['new', 'delhi', 'south', 'delhi', 'delhi']   num=['922'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['delhi', 'new', 'south']
+
+--- miss 18 ---  S1-209980662  vs  S2-732014224   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Prime Interstate Twin LLC'
+      name norm: 'prime interstate twin llc'
+      name tok : ['prime', 'interstate', 'twin']
+      addr raw : '3333 66, Town Of Linwood, WI'
+      addr norm: '3333 66 town of linwood wi'
+      addr tok : ['town', 'of', 'linwood', 'wi']   num=['3333', '66'] pc=''
+  S23 name raw : 'Prime Interstate LLC Services'
+      name norm: 'prime interstate llc services'
+      name tok : ['prime', 'interstate', 'services']
+      addr raw : '3333 66, RUDOLPH, WI'
+      addr norm: '3333 66 rudolph wi'
+      addr tok : ['rudolph', 'wi']   num=['3333', '66'] pc=''
+  SHARED name tokens: ['interstate', 'prime']
+  SHARED addr tokens: ['wi']
+
+--- miss 19 ---  S1-411267886  vs  S2-124150060   [India / India]  scripts name latin|devanagari  addr latin|devanagari
+  S1  name raw : 'Sai Impex Private Limited'
+      name norm: 'sai impex pvt ltd'
+      name tok : ['sai', 'impex']
+      addr raw : '1112, Second Floor, Near Subhash Chowk, Sec-47, Sadar Bazar, Gurgaon, Haryana'
+      addr norm: '1112 second floor near subhash chowk sector 47 sadar bazar gurgaon haryana'
+      addr tok : ['second', 'floor', 'near', 'subhash', 'chowk', 'sector', 'sadar', 'bazar', 'gurgaon', 'haryana']   num=['1112', '47'] pc=''
+  S23 name raw : 'साईं इम्पेक्स प्राइवेट लिमिटेड'
+      name norm: 'sain impeks praivet ltd'
+      name tok : ['sain', 'impeks', 'praivet']
+      addr raw : '1112, SADAR BAZAR, GURUGRAM SECTOR X, हरियाणा'
+      addr norm: '1112 sadar bazar gurugram sector hariyan'
+      addr tok : ['sadar', 'bazar', 'gurugram', 'sector', 'hariyan']   num=['1112'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['bazar', 'sadar', 'sector']
+
+--- miss 20 ---  S1-813990565  vs  S2-732820201   [India / India]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Prime Technologies Pvt Ltd'
+      name norm: 'prime technologies pvt ltd'
+      name tok : ['prime', 'technologies']
+      addr raw : 'Flat No.101, 6-3-1219/6/1, Uma Nagar, Lane I, Begumpet, Secunderabad, Hyderabad, Telangana'
+      addr norm: 'flat no 101 6 3 1219 6 1 uma nagar lane begumpet secunderabad hyderabad telangana'
+      addr tok : ['flat', 'no', 'uma', 'nagar', 'lane', 'begumpet', 'secunderabad', 'hyderabad', 'telangana']   num=['101', '6-3-1219/6/1'] pc=''
+  S23 name raw : '-- Prime Téchnologies Pvt Ltd'
+      name norm: 'prime technologies pvt ltd'
+      name tok : ['prime', 'technologies']
+      addr raw : '101, HYDERABAD, SECUNDERABAD, Andhra Pradesh'
+      addr norm: '101 hyderabad secunderabad andhra pradesh'
+      addr tok : ['hyderabad', 'secunderabad', 'andhra', 'pradesh']   num=['101'] pc=''
+  SHARED name tokens: ['prime', 'technologies']
+  SHARED addr tokens: ['hyderabad', 'secunderabad']
+
+--- miss 21 ---  S1-478512903  vs  S2-273121268   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Upper Academy'
+      name norm: 'upper academy'
+      name tok : ['upper', 'academy']
+      addr raw : 'WA, Issaquah, 3603 L 228th Avenue'
+      addr norm: 'wa issaquah 3603 228th avenue'
+      addr tok : ['wa', 'issaquah', '228th', 'avenue']   num=['3603'] pc=''
+  S23 name raw : 'Upper Academy Inc'
+      name norm: 'upper academy inc'
+      name tok : ['upper', 'academy']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['academy', 'upper']
+  SHARED addr tokens: NONE
+
+--- miss 22 ---  S1-581741327  vs  S2-810714450   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Dermatology Fresh Clinic'
+      name norm: 'dermatology fresh clinic'
+      name tok : ['dermatology', 'fresh', 'clinic']
+      addr raw : '5110 16th Ave SW, Unit 6, Cedar Rapids, IA'
+      addr norm: '5110 16th avenue sw unit 6 cedar rapids ia'
+      addr tok : ['16th', 'avenue', 'sw', 'unit', 'cedar', 'rapids', 'ia']   num=['5110', '6'] pc=''
+  S23 name raw : 'Dermatology Fresh Clinic LLC'
+      name norm: 'dermatology fresh clinic llc'
+      name tok : ['dermatology', 'fresh', 'clinic']
+      addr raw : '005110 16TH AVE SOUTHWEST, CEDAR RAPIDS, IA'
+      addr norm: '005110 16th avenue southwest cedar rapids ia'
+      addr tok : ['16th', 'avenue', 'southwest', 'cedar', 'rapids', 'ia']   num=['005110'] pc='005110'
+  SHARED name tokens: ['clinic', 'dermatology', 'fresh']
+  SHARED addr tokens: ['16th', 'avenue', 'cedar', 'ia', 'rapids']
+
+--- miss 23 ---  S1-949281154  vs  S2-176504952   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Orthopedic Empire Care PLLC'
+      name norm: 'orthopedic empire care pllc'
+      name tok : ['orthopedic', 'empire', 'care', 'pllc']
+      addr raw : '632 Main Street, Unit 3, Walpole, MA'
+      addr norm: '632 main street unit 3 walpole ma'
+      addr tok : ['main', 'street', 'unit', 'walpole', 'ma']   num=['632', '3'] pc=''
+  S23 name raw : 'Orthopedic Émpire Care PLLC'
+      name norm: 'orthopedic empire care pllc'
+      name tok : ['orthopedic', 'empire', 'care', 'pllc']
+      addr raw : '632 MAIN ST, WALLPOLE, MA'
+      addr norm: '632 main street wallpole ma'
+      addr tok : ['main', 'street', 'wallpole', 'ma']   num=['632'] pc=''
+  SHARED name tokens: ['care', 'empire', 'orthopedic', 'pllc']
+  SHARED addr tokens: ['ma', 'main', 'street']
+
+--- miss 24 ---  S1-801539255  vs  S2-911167676   [India / India]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Indian Constructions Private Limited'
+      name norm: 'indian constructions pvt ltd'
+      name tok : ['indian', 'constructions']
+      addr raw : '528/530, Sanghavi Sadan, 1St Floor, J.S.S. Road, Chira Bazar., Mumbai, Mumbai City, Maharashtra'
+      addr norm: '528 530 sanghavi sadan 1st floor road chira bazar mumbai mumbai city maharashtra'
+      addr tok : ['sanghavi', 'sadan', '1st', 'floor', 'road', 'chira', 'bazar', 'mumbai', 'mumbai', 'city', 'maharashtra']   num=['528/530'] pc=''
+  S23 name raw : 'Smt Indian Constructions Privanhed Limited'
+      name norm: 'smt indian constructions privanhed ltd'
+      name tok : ['smt', 'indian', 'constructions', 'privanhed']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['constructions', 'indian']
+  SHARED addr tokens: NONE
+
+--- miss 25 ---  S1-342786726  vs  S2-637747742   [India / India]  scripts name latin|latin  addr latin|devanagari
+  S1  name raw : 'Prabha Solutions Private Limited'
+      name norm: 'prabha solutions pvt ltd'
+      name tok : ['prabha', 'solutions']
+      addr raw : 'Block No-71, M I D C, Andheri (East), Mumbai, Maharashtra'
+      addr norm: 'block no 71 andheri east mumbai maharashtra'
+      addr tok : ['block', 'no', 'andheri', 'east', 'mumbai', 'maharashtra']   num=['71'] pc=''
+  S23 name raw : 'Prabha Private Limited Services'
+      name norm: 'prabha pvt ltd services'
+      name tok : ['prabha', 'services']
+      addr raw : 'BLOCK NO-D/71, M I D C, ANDHERI (EAST), महाराष्ट्र'
+      addr norm: 'block no 71 andheri east maharashtr'
+      addr tok : ['block', 'no', 'andheri', 'east', 'maharashtr']   num=['71'] pc=''
+  SHARED name tokens: ['prabha']
+  SHARED addr tokens: ['andheri', 'block', 'east', 'no']
+
+--- miss 26 ---  S1-840463038  vs  S2-273320946   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Metro Council'
+      name norm: 'metro council'
+      name tok : ['metro', 'council']
+      addr raw : '4224 Virginia Avenue, MO, Kansas City'
+      addr norm: '4224 virginia avenue mo kansas city'
+      addr tok : ['virginia', 'avenue', 'mo', 'kansas', 'city']   num=['4224'] pc=''
+  S23 name raw : 'Metro Council'
+      name norm: 'metro council'
+      name tok : ['metro', 'council']
+      addr raw : '4224 VIRGINIA AVE, KANSAS CITY, MO'
+      addr norm: '4224 virginia avenue kansas city mo'
+      addr tok : ['virginia', 'avenue', 'kansas', 'city', 'mo']   num=['4224'] pc=''
+  SHARED name tokens: ['council', 'metro']
+  SHARED addr tokens: ['avenue', 'city', 'kansas', 'mo', 'virginia']
+
+--- miss 27 ---  S1-780754274  vs  S2-299824462   [India / India]  scripts name latin|tamil  addr latin|latin
+  S1  name raw : 'Krishna Great Investment Private Limited'
+      name norm: 'krishna great investment pvt ltd'
+      name tok : ['krishna', 'great', 'investment']
+      addr raw : 'Plot No.1661, First Floor, Lig- I, Tnhb Colony Velacherry, Chennai, Tamil Nadu'
+      addr norm: 'plot no 1661 first floor lig tnhb colony velacherry chennai tamil nadu'
+      addr tok : ['plot', 'no', 'first', 'floor', 'lig', 'tnhb', 'colony', 'velacherry', 'chennai', 'tamil', 'nadu']   num=['1661'] pc=''
+  S23 name raw : 'கிருஷ்ணா கிரேட் இன்வெஸ்ட்மெண்ட் பிரைவேட் லிமிடெட்'
+      name norm: 'ghirushn ghiredh innnvesdhmendh bhiraivedh limidhedh'
+      name tok : ['ghirushn', 'ghiredh', 'innnvesdhmendh', 'bhiraivedh', 'limidhedh']
+      addr raw : '166, CHENNAI, Tamil Nadu'
+      addr norm: '166 chennai tamil nadu'
+      addr tok : ['chennai', 'tamil', 'nadu']   num=['166'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['chennai', 'nadu', 'tamil']
+
+--- miss 28 ---  S1-525155802  vs  S2-326258996   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Reliable Security Products LLC'
+      name norm: 'reliable security products llc'
+      name tok : ['reliable', 'security', 'products']
+      addr raw : '5652 Kanetown Road, Tunnelton, WV'
+      addr norm: '5652 kanetown road tunnelton wv'
+      addr tok : ['kanetown', 'road', 'tunnelton', 'wv']   num=['5652'] pc=''
+  S23 name raw : 'Reliable  Secauity Products LLC'
+      name norm: 'reliable secauity products llc'
+      name tok : ['reliable', 'secauity', 'products']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['products', 'reliable']
+  SHARED addr tokens: NONE
+
+--- miss 29 ---  S1-999943149  vs  S2-960867103   [India / India]  scripts name latin|devanagari  addr latin|latin
+  S1  name raw : 'Red Foundation Private Limited'
+      name norm: 'red foundation pvt ltd'
+      name tok : ['red', 'foundation']
+      addr raw : '1105/A, Sector 5, Mhada, Nr St Xavier High School, Thane, Maharashtra'
+      addr norm: '1105 sector 5 mhada near street xavier high school thane maharashtra'
+      addr tok : ['sector', 'mhada', 'near', 'street', 'xavier', 'high', 'school', 'thane', 'maharashtra']   num=['1105', '5'] pc=''
+  S23 name raw : 'रेड फाउंडेशन प्राइवेट लिमिटेड'
+      name norm: 'red phaundeshan praivet ltd'
+      name tok : ['red', 'phaundeshan', 'praivet']
+      addr raw : '1105/A, THANE, Maharashtra, THANE'
+      addr norm: '1105 thane maharashtra thane'
+      addr tok : ['thane', 'maharashtra', 'thane']   num=['1105'] pc=''
+  SHARED name tokens: ['red']
+  SHARED addr tokens: ['maharashtra', 'thane']
+
+--- miss 30 ---  S1-588564592  vs  S2-722196031   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Creative Cascade Pacific'
+      name norm: 'creative cascade pacific'
+      name tok : ['creative', 'cascade', 'pacific']
+      addr raw : '9311 Cross Meadows Cir, Louisville, KY'
+      addr norm: '9311 cross meadows cir louisville ky'
+      addr tok : ['cross', 'meadows', 'cir', 'louisville', 'ky']   num=['9311'] pc=''
+  S23 name raw : 'Creative Cascade'
+      name norm: 'creative cascade'
+      name tok : ['creative', 'cascade']
+      addr raw : '9200 Cross Meadows Cir, LOUISVILLE, KY'
+      addr norm: '9200 cross meadows cir louisville ky'
+      addr tok : ['cross', 'meadows', 'cir', 'louisville', 'ky']   num=['9200'] pc=''
+  SHARED name tokens: ['cascade', 'creative']
+  SHARED addr tokens: ['cir', 'cross', 'ky', 'louisville', 'meadows']
+
+--- miss 31 ---  S1-955167807  vs  S2-885939934   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Chiropractic Care Inc'
+      name norm: 'chiropractic care inc'
+      name tok : ['chiropractic', 'care']
+      addr raw : '2485 Ivanhoe Road, Ivanhoe, NC'
+      addr norm: '2485 ivanhoe road ivanhoe nc'
+      addr tok : ['ivanhoe', 'road', 'ivanhoe', 'nc']   num=['2485'] pc=''
+  S23 name raw : 'Chiropractic Care'
+      name norm: 'chiropractic care'
+      name tok : ['chiropractic', 'care']
+      addr raw : 'IVANHOE RD, IVANHOE, NC'
+      addr norm: 'ivanhoe road ivanhoe nc'
+      addr tok : ['ivanhoe', 'road', 'ivanhoe', 'nc']   num=[] pc=''
+  SHARED name tokens: ['care', 'chiropractic']
+  SHARED addr tokens: ['ivanhoe', 'nc', 'road']
+
+--- miss 32 ---  S1-471589105  vs  S2-997855238   [India / India]  scripts name latin|bengali  addr latin|latin
+  S1  name raw : 'Maa Services Private Limited'
+      name norm: 'maa services pvt ltd'
+      name tok : ['maa', 'services']
+      addr raw : '7 Rabindra Sarani, Kolkata, Howrah, West Bengal'
+      addr norm: '7 rabindra sarani kolkata howrah west bengal'
+      addr tok : ['rabindra', 'sarani', 'kolkata', 'howrah', 'west', 'bengal']   num=['7'] pc=''
+  S23 name raw : 'মা সার্ভিসেস প্রাইভেট লিমিটেড'
+      name norm: 'ma sarbhises praibhet ltd'
+      name tok : ['ma', 'sarbhises', 'praibhet']
+      addr raw : 'DOOR NO 07 RABINDRA SAANI, KOLKATA, CALCUTTA, KOLKATTA, West Bengal'
+      addr norm: 'door no 07 rabindra saani kolkata calcutta kolkatta west bengal'
+      addr tok : ['door', 'no', 'rabindra', 'saani', 'kolkata', 'calcutta', 'kolkatta', 'west', 'bengal']   num=['07'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['bengal', 'kolkata', 'rabindra', 'west']
+
+--- miss 33 ---  S1-191980899  vs  S2-396702625   [India / India]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Services Bansal Solutions Private Limited'
+      name norm: 'services bansal solutions pvt ltd'
+      name tok : ['services', 'bansal', 'solutions']
+      addr raw : 'C/O Reshma Khatun, Nimoul, Gaighatta, Azam Nagar, Katihar, Bihar'
+      addr norm: 'reshma khatun nimoul gaighatta azam nagar katihar bihar'
+      addr tok : ['reshma', 'khatun', 'nimoul', 'gaighatta', 'azam', 'nagar', 'katihar', 'bihar']   num=[] pc=''
+  S23 name raw : 'Services Bansal Solutions Private Ltd'
+      name norm: 'services bansal solutions pvt ltd'
+      name tok : ['services', 'bansal', 'solutions']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['bansal', 'services', 'solutions']
+  SHARED addr tokens: NONE
+
+--- miss 34 ---  S1-491605982  vs  S2-489253995   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Montes Pediatrics Center'
+      name norm: 'montes pediatrics center'
+      name tok : ['montes', 'pediatrics', 'center']
+      addr raw : '1012 7th Street, Unit UNIT 74, Upland, CA'
+      addr norm: '1012 7th street unit unit 74 upland ca'
+      addr tok : ['7th', 'street', 'unit', 'unit', 'upland', 'ca']   num=['1012', '74'] pc=''
+  S23 name raw : 'Montes Pediatrics Center Corp'
+      name norm: 'montes pediatrics center corp'
+      name tok : ['montes', 'pediatrics', 'center']
+      addr raw : '1012 7ST STREET, UPAND, CA'
+      addr norm: '1012 7st street upand ca'
+      addr tok : ['7st', 'street', 'upand', 'ca']   num=['1012'] pc=''
+  SHARED name tokens: ['center', 'montes', 'pediatrics']
+  SHARED addr tokens: ['ca', 'street']
+
+--- miss 35 ---  S1-112949554  vs  S2-337195128   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Ace Property Group'
+      name norm: 'ace property group'
+      name tok : ['ace', 'property', 'group']
+      addr raw : '719 13th Avenue, South Saint Paul, MN'
+      addr norm: '719 13th avenue south saint paul mn'
+      addr tok : ['13th', 'avenue', 'south', 'saint', 'paul', 'mn']   num=['719'] pc=''
+  S23 name raw : 'Ace Property Group'
+      name norm: 'ace property group'
+      name tok : ['ace', 'property', 'group']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['ace', 'group', 'property']
+  SHARED addr tokens: NONE
+
+--- miss 36 ---  S1-130302150  vs  S2-445599893   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Interstate Institute'
+      name norm: 'interstate institute'
+      name tok : ['interstate', 'institute']
+      addr raw : 'OH, 526 Heritage Woods Drive, Akron'
+      addr norm: 'oh 526 heritage woods drive akron'
+      addr tok : ['oh', 'heritage', 'woods', 'drive', 'akron']   num=['526'] pc=''
+  S23 name raw : 'Interstate Ingtimute'
+      name norm: 'interstate ingtimute'
+      name tok : ['interstate', 'ingtimute']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['interstate']
+  SHARED addr tokens: NONE
+
+--- miss 37 ---  S1-488042324  vs  S2-461862401   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Peridial Abony LLC'
+      name norm: 'peridial abony llc'
+      name tok : ['peridial', 'abony']
+      addr raw : '899 Jefferson Road, Wooster, OH'
+      addr norm: '899 jefferson road wooster oh'
+      addr tok : ['jefferson', 'road', 'wooster', 'oh']   num=['899'] pc=''
+  S23 name raw : 'peridialabony.com'
+      name norm: 'peridialabony com'
+      name tok : ['peridialabony', 'com']
+      addr raw : 'WOOSTER, OH, 00899 JEFFERSON RD'
+      addr norm: 'wooster oh 00899 jefferson road'
+      addr tok : ['wooster', 'oh', 'jefferson', 'road']   num=['00899'] pc='00899'
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['jefferson', 'oh', 'road', 'wooster']
+
+--- miss 38 ---  S1-338537407  vs  S2-765074882   [India / India]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Kolkata Services Pvt Ltd'
+      name norm: 'kolkata services pvt ltd'
+      name tok : ['kolkata', 'services']
+      addr raw : 'Kolkata, North 24 Parganas, West Bengal, Ae 339 Salt Lake'
+      addr norm: 'kolkata north 24 parganas west bengal ae 339 salt lake'
+      addr tok : ['kolkata', 'north', 'parganas', 'west', 'bengal', 'ae', 'salt', 'lake']   num=['24', '339'] pc=''
+  S23 name raw : 'kolkataservices.com'
+      name norm: 'kolkataservices com'
+      name tok : ['kolkataservices', 'com']
+      addr raw : 'AE 39 SALT LAKE, KOLKATA, West Bengal'
+      addr norm: 'ae 39 salt lake kolkata west bengal'
+      addr tok : ['ae', 'salt', 'lake', 'kolkata', 'west', 'bengal']   num=['39'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['ae', 'bengal', 'kolkata', 'lake', 'salt', 'west']
+
+--- miss 39 ---  S1-455581477  vs  S2-913682953   [India / India]  scripts name latin|devanagari  addr latin|latin
+  S1  name raw : 'Good Power Private Limited'
+      name norm: 'good power pvt ltd'
+      name tok : ['good', 'power']
+      addr raw : 'Goregaon West, 2Nd Flr, Laxmi Singh Complex, Maharashtra, Mumbai, Shp No - 4123'
+      addr norm: 'goregaon west 2nd flr laxmi singh complex maharashtra mumbai shp no 4123'
+      addr tok : ['goregaon', 'west', '2nd', 'flr', 'laxmi', 'singh', 'complex', 'maharashtra', 'mumbai', 'shp', 'no']   num=['4123'] pc=''
+  S23 name raw : 'गुड पावर प्राइवेट लिमिटेड'
+      name norm: 'gud pavar praivet ltd'
+      name tok : ['gud', 'pavar', 'praivet']
+      addr raw : 'SHP NO - 123, MUMBAI, GOREGAON WEST, Maharashtra'
+      addr norm: 'shp no 123 mumbai goregaon west maharashtra'
+      addr tok : ['shp', 'no', 'mumbai', 'goregaon', 'west', 'maharashtra']   num=['123'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['goregaon', 'maharashtra', 'mumbai', 'no', 'shp', 'west']
+
+--- miss 40 ---  S1-42237205  vs  S2-146317358   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Pipes & Rubio LLC'
+      name norm: 'pipes and rubio llc'
+      name tok : ['pipes', 'and', 'rubio']
+      addr raw : '2828 Amherst Street, University Park, TX'
+      addr norm: '2828 amherst street university park tx'
+      addr tok : ['amherst', 'street', 'university', 'park', 'tx']   num=['2828'] pc=''
+  S23 name raw : 'pipesrubio.com'
+      name norm: 'pipesrubio com'
+      name tok : ['pipesrubio', 'com']
+      addr raw : 'AMHERST STREET, UNIVERSITY PARK, TX'
+      addr norm: 'amherst street university park tx'
+      addr tok : ['amherst', 'street', 'university', 'park', 'tx']   num=[] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['amherst', 'park', 'street', 'tx', 'university']
+
+--- miss 41 ---  S1-834324590  vs  S2-102538181   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Horizon Lafayette LLC'
+      name norm: 'horizon lafayette llc'
+      name tok : ['horizon', 'lafayette']
+      addr raw : '695 State Street, Unit 208, Elgin, IL'
+      addr norm: '695 state street unit 208 elgin il'
+      addr tok : ['state', 'street', 'unit', 'elgin', 'il']   num=['695', '208'] pc=''
+  S23 name raw : 'Horizon Lafagyeee LLC'
+      name norm: 'horizon lafagyeee llc'
+      name tok : ['horizon', 'lafagyeee']
+      addr raw : '995 STATE ST, ELGIN, IL'
+      addr norm: '995 state street elgin il'
+      addr tok : ['state', 'street', 'elgin', 'il']   num=['995'] pc=''
+  SHARED name tokens: ['horizon']
+  SHARED addr tokens: ['elgin', 'il', 'state', 'street']
+
+--- miss 42 ---  S1-571385204  vs  S2-255863402   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Physical Therapy Care'
+      name norm: 'physical therapy care'
+      name tok : ['physical', 'therapy', 'care']
+      addr raw : '2655 Gold Mine Road, Highlands, NC'
+      addr norm: '2655 gold mine road highlands nc'
+      addr tok : ['gold', 'mine', 'road', 'highlands', 'nc']   num=['2655'] pc=''
+  S23 name raw : 'DELTAZEPH'
+      name norm: 'deltazeph'
+      name tok : ['deltazeph']
+      addr raw : '2655 GOLD MIEN ROAD, HIGHLANDS, NC'
+      addr norm: '2655 gold mien road highlands nc'
+      addr tok : ['gold', 'mien', 'road', 'highlands', 'nc']   num=['2655'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['gold', 'highlands', 'nc', 'road']
+
+--- miss 43 ---  S1-13921052  vs  S2-906642158   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Holdco, LLC'
+      name norm: 'holdco llc'
+      name tok : ['holdco']
+      addr raw : '299 Colony Avenue, Staten Island, NY'
+      addr norm: '299 colony avenue staten island ny'
+      addr tok : ['colony', 'avenue', 'staten', 'island', 'ny']   num=['299'] pc=''
+  S23 name raw : 'Brixcira'
+      name norm: 'brixcira'
+      name tok : ['brixcira']
+      addr raw : '299  COLONY AVE, STATEN ISLAND, NY'
+      addr norm: '299 colony avenue staten island ny'
+      addr tok : ['colony', 'avenue', 'staten', 'island', 'ny']   num=['299'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['avenue', 'colony', 'island', 'ny', 'staten']
+
+--- miss 44 ---  S1-993637114  vs  S2-231942361   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Preferred Highland Premier'
+      name norm: 'preferred highland premier'
+      name tok : ['preferred', 'highland', 'premier']
+      addr raw : 'NC, 9117 Colony Village Lane, Raleigh'
+      addr norm: 'nc 9117 colony village lane raleigh'
+      addr tok : ['nc', 'colony', 'village', 'lane', 'raleigh']   num=['9117'] pc=''
+  S23 name raw : 'Preferred Hhand Premier'
+      name norm: 'preferred hhand premier'
+      name tok : ['preferred', 'hhand', 'premier']
+      addr raw : '9117 COLONY VILLAGE LANE, RALEIHG CDP, NC'
+      addr norm: '9117 colony village lane raleihg cdp nc'
+      addr tok : ['colony', 'village', 'lane', 'raleihg', 'cdp', 'nc']   num=['9117'] pc=''
+  SHARED name tokens: ['preferred', 'premier']
+  SHARED addr tokens: ['colony', 'lane', 'nc', 'village']
+
+--- miss 45 ---  S1-622271185  vs  S2-903178736   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Creative Technical Worldwide LP'
+      name norm: 'creative technical worldwide lp'
+      name tok : ['creative', 'technical', 'worldwide', 'lp']
+      addr raw : 'TX, 2228 Robinwood Drive, Fort Worth'
+      addr norm: 'tx 2228 robinwood drive fort worth'
+      addr tok : ['tx', 'robinwood', 'drive', 'fort', 'worth']   num=['2228'] pc=''
+  S23 name raw : 'Creative Technica1 Worldwide LP'
+      name norm: 'creative technica1 worldwide lp'
+      name tok : ['creative', 'technica1', 'worldwide', 'lp']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['creative', 'lp', 'worldwide']
+  SHARED addr tokens: NONE
+
+--- miss 46 ---  S1-96108890  vs  S2-422894611   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Morris Management LP'
+      name norm: 'morris management lp'
+      name tok : ['morris', 'management', 'lp']
+      addr raw : '104 Meadow Green Drive, New Market, AL'
+      addr norm: '104 meadow green drive new market al'
+      addr tok : ['meadow', 'green', 'drive', 'new', 'market', 'al']   num=['104'] pc=''
+  S23 name raw : 'MORRI5 (MANAGEMENT)'
+      name norm: 'morri5 management'
+      name tok : ['morri5', 'management']
+      addr raw : '10 Meadow Green Dr, NEW MARKET, AL'
+      addr norm: '10 meadow green drive new market al'
+      addr tok : ['meadow', 'green', 'drive', 'new', 'market', 'al']   num=['10'] pc=''
+  SHARED name tokens: ['management']
+  SHARED addr tokens: ['al', 'drive', 'green', 'market', 'meadow', 'new']
+
+--- miss 47 ---  S1-311211699  vs  S2-450302956   [India / India]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Preferred Marketing Private Limited'
+      name norm: 'preferred marketing pvt ltd'
+      name tok : ['preferred', 'marketing']
+      addr raw : 'Haryana, H. No. 379 1St Floor, Panchkula, Sector 23, Panchkula'
+      addr norm: 'haryana no 379 1st floor panchkula sector 23 panchkula'
+      addr tok : ['haryana', 'no', '1st', 'floor', 'panchkula', 'sector', 'panchkula']   num=['379', '23'] pc=''
+  S23 name raw : 'SYNIRIZEPH'
+      name norm: 'synirizeph'
+      name tok : ['synirizeph']
+      addr raw : 'NO 379. 1ST FLOOR, PANCHKULA, Haryana'
+      addr norm: 'no 379 1st floor panchkula haryana'
+      addr tok : ['no', '1st', 'floor', 'panchkula', 'haryana']   num=['379'] pc=''
+  SHARED name tokens: NONE
+  SHARED addr tokens: ['1st', 'floor', 'haryana', 'no', 'panchkula']
+
+--- miss 48 ---  S1-567173685  vs  S2-672265828   [India / India]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Vision Blue Infrastructure Private Limited'
+      name norm: 'vision blue infrastructure pvt ltd'
+      name tok : ['vision', 'blue', 'infrastructure']
+      addr raw : 'Plot No 68 To 89Parvatico-Op Industrial Estate Limited, Maharashtra'
+      addr norm: 'plot no 68 to 89parvatico op industrial estate limited maharashtra'
+      addr tok : ['plot', 'no', 'to', '89parvatico', 'op', 'industrial', 'estate', 'limited', 'maharashtra']   num=['68'] pc=''
+  S23 name raw : 'Vision Blue Infrastructure Private Ltd'
+      name norm: 'vision blue infrastructure pvt ltd'
+      name tok : ['vision', 'blue', 'infrastructure']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['blue', 'infrastructure', 'vision']
+  SHARED addr tokens: NONE
+
+--- miss 49 ---  S1-936857315  vs  S2-609257804   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Schwab Chimera LLC'
+      name norm: 'schwab chimera llc'
+      name tok : ['schwab', 'chimera']
+      addr raw : '212 Marion Street, Cardington, OH'
+      addr norm: '212 marion street cardington oh'
+      addr tok : ['marion', 'street', 'cardington', 'oh']   num=['212'] pc=''
+  S23 name raw : 'Schwab Cihmera LLC'
+      name norm: 'schwab cihmera llc'
+      name tok : ['schwab', 'cihmera']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['schwab']
+  SHARED addr tokens: NONE
+
+--- miss 50 ---  S1-794378679  vs  S2-720518333   [US / US]  scripts name latin|latin  addr latin|latin
+  S1  name raw : 'Global Publishing LLC'
+      name norm: 'global publishing llc'
+      name tok : ['global', 'publishing']
+      addr raw : '3977 Eastway Loop, Anchorage, AK'
+      addr norm: '3977 eastway loop anchorage ak'
+      addr tok : ['eastway', 'loop', 'anchorage', 'ak']   num=['3977'] pc=''
+  S23 name raw : 'Global Publishing L.L.C.'
+      name norm: 'global publishing'
+      name tok : ['global', 'publishing']
+      addr raw : None
+      addr norm: ''
+      addr tok : []   num=[] pc=''
+  SHARED name tokens: ['global', 'publishing']
+  SHARED addr tokens: NONE
+
+done.
+EXIT=0

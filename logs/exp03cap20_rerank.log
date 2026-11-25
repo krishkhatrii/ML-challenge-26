@@ -1,0 +1,16 @@
+====================================================================================
+JACCARD RE-RANK — train
+====================================================================================
+  [token sets + IDF] ...
+  [token sets + IDF] 6.2s   rss now 2.5 GB
+  [jaccard variants (8 partitions)] ...
+  [jaccard variants (8 partitions)] 80.4s   rss now 5.5 GB
+
+  ranking                                @10       @20       @30       @50       @75      @100
+  --------------------------------------------------------------------------------------------
+  blocking IDF score (baseline)       81.01%    83.80%    84.98%    86.14%    86.90%    87.38%
+  jaccard plain                       84.65%    86.19%    86.69%    87.08%    87.27%    87.38%
+  jaccard IDF-weighted                84.93%    86.42%    86.87%    87.19%    87.32%    87.38%
+
+  WINNER at cap 20: jaccard IDF-weighted  (86.42%)
+  wrote train_reranked_cap20.parquet (183.1 MB) in 115s, peak RSS 5.7 GB

@@ -1,0 +1,21 @@
+=== exp00base  cap=30 max_pairs=5000000  20:20:24Z ===
+  PARQUET_DIR=data/parquet_full  CAND_DIR=data/cand_exp  S1_IDS=data/eval_ids.parquet
+--- cand  20:20:24Z
+    cand rc=1  92s  free=64GB
+--- rerank  20:21:56Z
+    rerank rc=0  125s  free=62GB
+--- feat_tr  20:24:01Z
+    feat_tr rc=0  236s  free=61GB
+--- feat_val  20:27:57Z
+    feat_val rc=0  486s  free=64GB
+--- train  20:36:03Z
+    train rc=0  322s  free=64GB
+--- sweep  20:41:25Z
+    sweep rc=0  129s  free=64GB
+
+=== exp00base done  20:43:34Z ===
+GATE (>= 97% overall recall at cap 30): FAIL — 84.97%
+  WINNER at cap 30: jaccard IDF-weighted  (86.87%)
+  CV AUC  mean 0.99850  std 0.00001
+  BEST tau=0.2 delta=0.35  macro-F_0.5 = 0.847028
+DRIVER_EXIT=0

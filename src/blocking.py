@@ -365,20 +365,63 @@ def cmd_index(args) -> int:
 # docs/PLAN.md stage 6). The cross-field composite B7 is the best value in the set:
 # 64.13% recall alone for 49.6M pairs, versus 62.98% for 825.7M from the address pair
 # block at a wide cap -- 16x the cost for less recall.
-DF_CAP_PAIR = 5_000        # token rarity for the within-field pair blocks
-K_PAIR = 8                 # rarest tokens kept per record for pair generation
-DF_CAP_SINGLE = 200        # a single shared token this rare is evidence on its own
-DF_CAP_COMPOSITE = 20_000  # wider, because the composite key is selective by construction
-K_COMPOSITE = 4
-CAPS = (10, 20, 30, 50)
-NPART = 8               # S1-hash partitions for the union group-by
-PRE_CAP = 100           # candidates kept per S1 BEFORE re-ranking. Not a df-cap change:
+# Overridable from the environment so a sweep does not need a source edit. The
+# defaults are the measured baseline operating point -- unset env == baseline.
+def _envint(k: str, d: int) -> int:
+    return int(os.environ.get(k, d))
+
+
+DF_CAP_PAIR = _envint("DF_CAP_PAIR", 5_000)        # rarity for the within-field pair blocks
+K_PAIR = _envint("K_PAIR", 8)                      # rarest tokens kept per record for pairs
+DF_CAP_SINGLE = _envint("DF_CAP_SINGLE", 200)      # a single shared token this rare is evidence alone
+DF_CAP_COMPOSITE = _envint("DF_CAP_COMPOSITE", 20_000)  # wider: the composite key is selective by construction
+K_COMPOSITE = _envint("K_COMPOSITE", 4)
+CAPS = (10, 20, 30, 50, 75, 100)
+NPART = _envint("NPART", 8)          # S1-hash partitions for the union group-by
+PRE_CAP = _envint("PRE_CAP", 100)    # candidates kept per S1 BEFORE re-ranking. Not a df-cap change:
                         # the blocks are unchanged, this only keeps more of what they
                         # already produced so the Jaccard re-rank has room to reorder.
 DEFAULT_CAP = 30
 
-BLOCKS = ("B1_postcode", "B2_number_addrtok", "B3_addr_pair", "B4_name_pair",
-          "B5_addr_single", "B6_name_single", "B7_addr_x_name")
+BLOCKS = ["B1_postcode", "B2_number_addrtok", "B3_addr_pair", "B4_name_pair",
+          "B5_addr_single", "B6_name_single", "B7_addr_x_name"]
+
+# ---------------------------------------------------------------- Exp 1 blocks
+# Exp 1 measured the 831,258 GT pairs the uncapped union never generates. Not one of
+# them shares a token below df=200; the mass sits at df 5k-100k, because names and
+# addresses are drawn from small word pools and no single token is ever rare. The three
+# rules below address that directly. All are OFF by default so the baseline path is
+# byte-identical with no environment set.
+
+# B8/B9 -- the whole token set as one key. Measured +4.86pp recovery, and the only rule
+# that reaches the rows whose S2/S3 address was deleted outright (66.9% of the residue).
+ENABLE_SETKEY = os.environ.get("ENABLE_SETKEY", "0") == "1"
+KEY_DF_CAP = _envint("KEY_DF_CAP", 1_000)   # on the KEY, not on its tokens
+KEY_MIN_TOK = _envint("KEY_MIN_TOK", 2)     # a 1-token key is just an uncapped single block
+
+# B10 -- pairs budgeted on the EXPECTED INTERSECTION df1*df2/N rather than on each df.
+# The current df<=5,000-per-token rule forbids a 20k x 20k pair (expected intersection
+# 39 records) while admitting 5k x 5k (expected 2.4). Measured +5.93pp at N*50.
+ENABLE_PRODPAIR = os.environ.get("ENABLE_PRODPAIR", "0") == "1"
+PROD_BUDGET = _envint("PROD_BUDGET", 50)    # in multiples of N: df1*df2 <= PROD_BUDGET*N
+K_PROD = _envint("K_PROD", 8)               # rarest tokens per record entering the pairing
+
+# Street numbers compared raw miss 5110/005110, 7/07, 1223/1223-1225. Measured +0.83pp.
+ENABLE_NUMNORM = os.environ.get("ENABLE_NUMNORM", "0") == "1"
+
+if ENABLE_SETKEY:
+    BLOCKS += ["B8_name_set", "B9_addr_set"]
+if ENABLE_PRODPAIR:
+    BLOCKS += ["B10_prod_pair"]
+
+
+def _numlist(col: str) -> str:
+    """Street numbers, optionally normalised: ranges split on - and /, zeros stripped."""
+    if not ENABLE_NUMNORM:
+        return col
+    return (f"list_distinct(list_filter(list_transform(flatten(list_transform({col}, "
+            f"x -> str_split(regexp_replace(x, '[^0-9/-]', '', 'g'), '-'))), "
+            f"z -> ltrim(z, '0')), y -> y <> ''))")
 
 
 def _idf(df_expr: str, n: int) -> str:
@@ -414,7 +457,18 @@ def cmd_candidates(args) -> int:
             "temp_directory": str(tmp_dir),
             "preserve_insertion_order": False,
         })
-        con.execute(f"CREATE VIEW s1 AS SELECT * FROM read_parquet('{norm_dir / (args.split + '_source1.parquet')}')")
+        # --s1-ids restricts the S1 side to a subset. Blocking is exactly per-S1
+        # independent -- the DF tables are built from S2+S3 only, and ranking/capping
+        # partition by S1 -- so the candidates produced for a subset are IDENTICAL to
+        # those a full run produces for the same entities. Restricting to the evaluation
+        # entities (val fold + the train-fold sample the model is fitted on) cuts this
+        # stage ~3.5x with no approximation.
+        s1_src = f"read_parquet('{norm_dir / (args.split + '_source1.parquet')}')"
+        if getattr(args, "s1_ids", None):
+            s1_src = (f"(SELECT f.* FROM {s1_src} f SEMI JOIN "
+                      f"read_parquet('{resolve(args.s1_ids)}') k ON k.entity_id = f.entity_id)")
+            print(f"  S1 restricted to {args.s1_ids}")
+        con.execute(f"CREATE VIEW s1 AS SELECT * FROM {s1_src}")
         con.execute(f"""CREATE VIEW s23 AS
             SELECT * FROM read_parquet('{norm_dir / (args.split + '_source2.parquet')}')
             UNION ALL
@@ -470,7 +524,7 @@ def cmd_candidates(args) -> int:
             for side in ("s1", "s23"):
                 con.execute(f"""CREATE TABLE b2_{side} AS SELECT DISTINCT
                     x.entity_id, x.num, r.token, r.df
-                    FROM (SELECT entity_id, unnest(addr_numbers) num FROM {side}) x
+                    FROM (SELECT entity_id, unnest({_numlist('addr_numbers')}) num FROM {side}) x
                     JOIN rpair_{side}_at r ON r.entity_id = x.entity_id""")
             emit("B2_number_addrtok", f"""
                 SELECT a.entity_id AS s1, b.entity_id AS s23, 'B2_number_addrtok' AS block,
@@ -519,6 +573,65 @@ def cmd_candidates(args) -> int:
                 GROUP BY 1, 2, 3""")
             con.execute("DROP TABLE x_s1"); con.execute("DROP TABLE x_s23")
 
+        # ---- B8/B9: the whole token set as one key ------------------------------
+        if ENABLE_SETKEY:
+            for kind, fld, block in (("nt", "name_tokens", "B8_name_set"),
+                                     ("at", "addr_tokens", "B9_addr_set")):
+                with phase(f"{block} (key df<={KEY_DF_CAP}, >={KEY_MIN_TOK} tokens)", sampler):
+                    for side in ("s1", "s23"):
+                        con.execute(f"""CREATE OR REPLACE TABLE ks_{side}_{kind} AS
+                            SELECT entity_id, array_to_string(t, '\x1f') AS k FROM (
+                              SELECT entity_id,
+                                     list_sort(list_distinct(list_filter({fld}, x -> len(x) >= 2))) AS t
+                              FROM {side})
+                            WHERE len(t) >= {KEY_MIN_TOK}""")
+                    con.execute(f"""CREATE OR REPLACE TABLE kdf_{kind} AS
+                        SELECT k, count(*) df FROM ks_s23_{kind} GROUP BY 1""")
+                    emit(block, f"""
+                        SELECT a.entity_id AS s1, b.entity_id AS s23, '{block}' AS block,
+                               {_idf('d.df', n23)} AS score
+                        FROM ks_s1_{kind} a JOIN ks_s23_{kind} b ON a.k = b.k
+                        JOIN kdf_{kind} d ON d.k = a.k
+                        WHERE d.df <= {KEY_DF_CAP}""")
+                    for side in ("s1", "s23"):
+                        con.execute(f"DROP TABLE IF EXISTS ks_{side}_{kind}")
+
+        # ---- B10: product-DF pair over the combined name+addr+number namespace ---
+        if ENABLE_PRODPAIR:
+            with phase(f"B10 product pair (df1*df2 <= {PROD_BUDGET}N, K={K_PROD})", sampler):
+                for side in ("s1", "s23"):
+                    con.execute(f"""CREATE OR REPLACE TABLE ctok_{side} AS
+                        SELECT DISTINCT entity_id, token FROM (
+                          SELECT entity_id, unnest(list_concat(
+                              list_concat(name_tokens, addr_tokens),
+                              {_numlist('addr_numbers')})) token
+                          FROM {side})
+                        WHERE len(token) >= 2""")
+                con.execute("""CREATE OR REPLACE TABLE dfc AS
+                    SELECT token, count(*) df FROM ctok_s23 GROUP BY 1""")
+                for side in ("s1", "s23"):
+                    con.execute(f"""CREATE OR REPLACE TABLE rprod_{side} AS
+                        SELECT entity_id, token, df FROM (
+                          SELECT x.entity_id, x.token, d.df,
+                                 row_number() OVER (PARTITION BY x.entity_id
+                                                    ORDER BY d.df, x.token) rk
+                          FROM ctok_{side} x JOIN dfc d USING (token)
+                        ) WHERE rk <= {K_PROD}""")
+                    con.execute(f"DROP TABLE IF EXISTS ctok_{side}")
+                    con.execute(f"""CREATE OR REPLACE TABLE pprod_{side} AS
+                        SELECT a.entity_id, a.token t1, b.token t2, a.df d1, b.df d2
+                        FROM rprod_{side} a JOIN rprod_{side} b
+                          ON a.entity_id = b.entity_id AND a.token < b.token
+                        WHERE a.df::BIGINT * b.df <= {PROD_BUDGET}::BIGINT * {n23}""")
+                emit("B10_prod_pair", f"""
+                    SELECT a.entity_id AS s1, b.entity_id AS s23, 'B10_prod_pair' AS block,
+                           max({_idf('a.d1', n23)} + {_idf('a.d2', n23)}) AS score
+                    FROM pprod_s1 a JOIN pprod_s23 b ON a.t1 = b.t1 AND a.t2 = b.t2
+                    GROUP BY 1, 2, 3""")
+                for side in ("s1", "s23"):
+                    con.execute(f"DROP TABLE IF EXISTS pprod_{side}")
+                    con.execute(f"DROP TABLE IF EXISTS rprod_{side}")
+
         # ---- union, score, rank (partitioned by S1 hash) ----------------------
         # 405M block rows keyed on two entity-id strings overflowed 35 GiB of spill when
         # grouped in one pass. Partitioning on hash(s1) keeps each group-by bounded and
@@ -527,24 +640,28 @@ def cmd_candidates(args) -> int:
         with phase(f"union + score + rank ({NPART} partitions)", sampler):
             glob = str(out_dir / "blk_*.parquet")
             n_cand = 0
+            # One pass per partition: the grouped pair set is materialised, counted
+            # (that count IS the uncapped distinct-pair total for the partition), then
+            # ranked and capped. Counting it with a second scan of the 373M-row glob
+            # doubled this phase's runtime for a number already in hand.
             for pt in range(NPART):
                 dst = out_dir / f"ranked_part{pt}.parquet"
+                con.execute(f"""CREATE OR REPLACE TEMP TABLE upair AS
+                    SELECT s1, s23, sum(score) AS score, count(*) AS n_blocks
+                    FROM (SELECT s1, s23, block, max(score) AS score
+                          FROM read_parquet('{glob}')
+                          WHERE hash(s1) % {NPART} = {pt}
+                          GROUP BY 1, 2, 3)
+                    GROUP BY 1, 2""")
+                n_cand += con.execute("SELECT count(*) FROM upair").fetchone()[0]
                 con.execute(f"""COPY (
                     SELECT s1, s23, score, n_blocks, rk FROM (
                       SELECT s1, s23, score, n_blocks,
                              row_number() OVER (PARTITION BY s1 ORDER BY score DESC, s23) AS rk
-                      FROM (
-                        SELECT s1, s23, sum(score) AS score, count(*) AS n_blocks
-                        FROM (SELECT s1, s23, block, max(score) AS score
-                              FROM read_parquet('{glob}')
-                              WHERE hash(s1) % {NPART} = {pt}
-                              GROUP BY 1, 2, 3)
-                        GROUP BY 1, 2)
-                    ) WHERE rk <= {PRE_CAP}
+                      FROM upair)
+                    WHERE rk <= {PRE_CAP}
                 ) TO '{dst}' (FORMAT PARQUET, COMPRESSION ZSTD)""")
-                n_cand += con.execute(f"""SELECT count(*) FROM
-                    (SELECT DISTINCT s1, s23 FROM read_parquet('{glob}')
-                     WHERE hash(s1) % {NPART} = {pt})""").fetchone()[0]
+                con.execute("DROP TABLE IF EXISTS upair")
             con.execute(f"""CREATE VIEW ranked AS
                 SELECT * FROM read_parquet('{out_dir / 'ranked_part*.parquet'}')""")
 
@@ -591,8 +708,7 @@ def cmd_candidates(args) -> int:
             pr = con.execute(f"SELECT count(*) FROM read_parquet('{paths[b]}')").fetchone()[0]
             hit = con.execute(f"""SELECT count(*) FROM gtx g SEMI JOIN
                 (SELECT DISTINCT s1, s23 FROM read_parquet('{paths[b]}')) c
-                ON c.s1 = g.s1 AND c.s23 = g.s23""")
-            del gt_path.fetchone()[0]
+                ON c.s1 = g.s1 AND c.s23 = g.s23""").fetchone()[0]
             print(f"  {b:<22}{pr:>16,}{hit:>17,}{100 * hit / n_gt:>9.2f}%")
         print("  " + "-" * 65)
         print(f"  {'UNION (uncapped)':<22}{n_cand:>16,}", end="")
@@ -682,6 +798,9 @@ def cmd_candidates(args) -> int:
         (out_dir / f"_{args.split}_candidates.json").write_text(json.dumps({
             "split": args.split, "df_cap_pair": DF_CAP_PAIR, "k_pair": K_PAIR,
             "df_cap_single": DF_CAP_SINGLE, "df_cap_composite": DF_CAP_COMPOSITE, "cap": cap,
+            "setkey": ENABLE_SETKEY, "key_df_cap": KEY_DF_CAP, "key_min_tok": KEY_MIN_TOK,
+            "prodpair": ENABLE_PRODPAIR, "prod_budget": PROD_BUDGET, "k_prod": K_PROD,
+            "numnorm": ENABLE_NUMNORM, "blocks": list(BLOCKS),
             "s1": n1, "s23": n23, "gt_pairs": n_gt, "candidates_uncapped": n_cand,
             "candidates_capped": kept, "recall_by_cap": {str(k): v for k, v in recalls.items()},
             "reduction_ratio": 1 - kept / full, "wall_seconds": round(wall, 1),
@@ -715,7 +834,11 @@ def cmd_rerank(args) -> int:
         con = duckdb.connect(config={
             "memory_limit": os.environ.get("DUCKDB_MEM", "9GB"), "threads": 8,
             "temp_directory": str(out_dir / "_duckdb_tmp"), "preserve_insertion_order": False})
-        con.execute(f"CREATE VIEW s1 AS SELECT * FROM read_parquet('{norm_dir / (args.split + chr(95) + 'source1.parquet')}')")
+        r_s1 = f"read_parquet('{norm_dir / (args.split + chr(95) + 'source1.parquet')}')"
+        if getattr(args, "s1_ids", None):
+            r_s1 = (f"(SELECT f.* FROM {r_s1} f SEMI JOIN "
+                    f"read_parquet('{resolve(args.s1_ids)}') k ON k.entity_id = f.entity_id)")
+        con.execute(f"CREATE VIEW s1 AS SELECT * FROM {r_s1}")
         con.execute(f"""CREATE VIEW s23 AS
             SELECT * FROM read_parquet('{norm_dir / (args.split + chr(95) + 'source2.parquet')}')
             UNION ALL SELECT * FROM read_parquet('{norm_dir / (args.split + chr(95) + 'source3.parquet')}')""")
@@ -776,9 +899,13 @@ def cmd_rerank(args) -> int:
             print(f"  wrote {dst.name} ({dst.stat().st_size/1e6:.1f} MB) in "
                   f"{time.perf_counter()-t0:.0f}s, peak RSS {human(peak_rss_bytes())}")
             return 0
-        con.execute(f"""CREATE TABLE gp AS SELECT source1_entity_id s1, trim(m) s23
-            FROM read_parquet('{gt}'), unnest(str_split(matched_entity_ids, ',')) t(m)
-            WHERE matched_entity_ids IS NOT NULL AND trim(matched_entity_ids) <> ''""")
+        # denominator must follow the S1 restriction, or recall is measured against
+        # ground truth for entities that were never a candidate-generation input.
+        con.execute(f"""CREATE TABLE gp AS SELECT g.s1, g.s23 FROM (
+              SELECT source1_entity_id s1, trim(m) s23
+              FROM read_parquet('{gt}'), unnest(str_split(matched_entity_ids, ',')) t(m)
+              WHERE matched_entity_ids IS NOT NULL AND trim(matched_entity_ids) <> ''
+            ) g SEMI JOIN s1 a ON a.entity_id = g.s1""")
         n_gt = con.execute("SELECT count(*) FROM gp").fetchone()[0]
 
         variants = {
@@ -830,6 +957,8 @@ def main() -> int:
     pc.add_argument("--parquet-dir", default=os.environ.get("PARQUET_DIR", "data/parquet"))
     pc.add_argument("--out", default=os.environ.get("CAND_DIR", "data/cand"))
     pc.add_argument("--cap", type=int, default=DEFAULT_CAP)
+    pc.add_argument("--s1-ids", default=None,
+                    help="parquet with an entity_id column; restrict the S1 side to it")
 
     pr = sub.add_parser("rerank", help="re-rank capped candidates by token-set Jaccard")
     pr.add_argument("--split", choices=["train", "test"], default="train")
@@ -837,6 +966,8 @@ def main() -> int:
     pr.add_argument("--parquet-dir", default=os.environ.get("PARQUET_DIR", "data/parquet"))
     pr.add_argument("--out", default=os.environ.get("CAND_DIR", "data/cand"))
     pr.add_argument("--cap", type=int, default=DEFAULT_CAP)
+    pr.add_argument("--s1-ids", default=None,
+                    help="parquet with an entity_id column; restrict the S1 side to it")
 
     args = ap.parse_args()
     if args.cmd == "rerank":

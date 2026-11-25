@@ -1,0 +1,82 @@
+====================================================================================
+CANDIDATE GENERATION — test   cap=30
+  pair blocks df<=5,000 K=8 | single df<=200 | composite df<=20,000 K=4
+====================================================================================
+  normalized  /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/normalized
+  out         /Users/krishbharatkhatri/Documents/coding/ML_challenge26/student_resource/data/cand_test_exp07
+  design      ADDRESS-FIRST (names are template-generated; see module notes)
+
+  S1 1,732,544   S2+S3 9,969,589
+
+  [token tables + DF] ...
+  [token tables + DF] 7.1s   rss now 3.8 GB
+  [rarest-token tables] ...
+  [rarest-token tables] 14.5s   rss now 4.2 GB
+  [B1 postcode exact] ...
+  [B1 postcode exact] 0.4s   rss now 4.2 GB
+  [B2 street-number + rare addr token] ...
+  [B2 street-number + rare addr token] 31.6s   rss now 4.8 GB
+  [B3_addr_pair] ...
+  [B3_addr_pair] 26.5s   rss now 5.6 GB
+  [B4_name_pair] ...
+  [B4_name_pair] 3.3s   rss now 5.8 GB
+  [B5_addr_single (df<=200)] ...
+  [B5_addr_single (df<=200)] 8.3s   rss now 6.2 GB
+  [B6_name_single (df<=200)] ...
+  [B6_name_single (df<=200)] 5.4s   rss now 6.2 GB
+  [B7 addr-token x name-token composite] ...
+  [B7 addr-token x name-token composite] 16.3s   rss now 6.2 GB
+  [B8_name_set (key df<=1000, >=2 tokens)] ...
+  [B8_name_set (key df<=1000, >=2 tokens)] 8.5s   rss now 6.2 GB
+  [B9_addr_set (key df<=1000, >=2 tokens)] ...
+  [B9_addr_set (key df<=1000, >=2 tokens)] 10.0s   rss now 6.2 GB
+  [union + score + rank (8 partitions)] ...
+  [union + score + rank (8 partitions)] 204.4s   rss now 6.9 GB
+  [skip recall (no labels)] ...
+  [skip recall (no labels)] 0.0s   rss now 6.9 GB
+
+  (no ground truth for this split — recall sections skipped)
+
+------------------------------------------------------------------------------------
+BLOCK SIZES AND PER-BLOCK RECALL (uncapped — where the recall comes from)
+------------------------------------------------------------------------------------
+  block                            pairs   GT pairs found    recall
+  -----------------------------------------------------------------
+  -----------------------------------------------------------------
+  UNION (uncapped)           398,970,794                0     0.00%
+
+------------------------------------------------------------------------------------
+RECALL BY CANDIDATE CAP
+------------------------------------------------------------------------------------
+     cap      candidates      GT found    recall   mean/S1   p99/S1   zero-cand S1
+  ------------------------------------------------------------------------------
+      10      17,128,194             -         -
+      20      33,451,735             -         -
+      30      48,959,160             -         -
+      50      77,839,033             -         -
+      75     110,287,141             -         -
+     100     138,547,142             -         -
+
+------------------------------------------------------------------------------------
+PER-SCRIPT RECALL (script of the matched S2/S3 record)   cap=30
+------------------------------------------------------------------------------------
+  script                GT pairs    uncapped      capped
+  ----------------------------------------------------
+
+------------------------------------------------------------------------------------
+PER-COUNTRY RECALL (country of the S1 record)   cap=30
+------------------------------------------------------------------------------------
+  country               GT pairs    uncapped      capped
+  ----------------------------------------------------
+
+------------------------------------------------------------------------------------
+COST
+------------------------------------------------------------------------------------
+  full cross product        17,272,751,604,416
+  candidates kept (cap 30)   48,959,160
+  reduction ratio           0.9999971655
+  pairs per S1 (mean)       28.3
+  wall clock                336.4s
+  peak RSS                  6.9 GB
+
+  wrote test_candidates_cap30.parquet  (436.4 MB)

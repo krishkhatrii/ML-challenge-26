@@ -1,0 +1,59 @@
+GT + miss tables ...
+  GT 7,638,365   misses 831,258  (10.88%)
+
+combined token DF ...
+normalised street numbers ...
+miss feature table ...
+
+============================================================================================
+LEVER RECOVERY — upper bound on what each rule could add. misses = 831,258
+============================================================================================
+  L1  identical name token SET (exact key)                         313,380   37.7% of misses  -> + 4.10pp GT recall
+  L2  identical addr token SET (exact key)                          81,109    9.8% of misses  -> + 1.06pp GT recall
+  L3  identical name OR addr token SET                             371,282   44.7% of misses  -> + 4.86pp GT recall
+  L4  >=2 shared tokens, ANY df (combined field)                   780,443   93.9% of misses  -> +10.22pp GT recall
+  L5  >=3 shared tokens, ANY df (combined field)                   622,650   74.9% of misses  -> + 8.15pp GT recall
+  L6  street number match, leading zeros stripped + ranges split   495,545   59.6% of misses  -> + 6.49pp GT recall
+  L6b  ... and it did NOT match raw (what the fix alone buys)       63,570    7.6% of misses  -> + 0.83pp GT recall
+  L7  normalised number AND >=1 shared token                       494,317   59.5% of misses  -> + 6.47pp GT recall
+
+============================================================================================
+L8  PRODUCT-DF PAIR RULE — a shared token pair whose expected intersection is small
+============================================================================================
+    current B3/B4 rule is df<=5,000 on EACH token, which forbids a 20k x 20k pair
+    (expected intersection 20k*20k/10,320,219 = 39 records) while allowing
+    5k x 5k (expected 2.4). The binding quantity is the product.
+
+  budget: df1*df2 <= N *              misses reachable    share   +pp GT
+  ----------------------------------------------------------------------
+  N * 5                                        145,240    17.5%    1.90
+  N * 20                                       313,350    37.7%    4.10
+  N * 50                                       453,273    54.5%    5.93
+  N * 200                                      624,817    75.2%    8.18
+  N * 1000                                     712,444    85.7%    9.33
+  N * 5000                                     751,444    90.4%    9.84
+
+============================================================================================
+L9  TRIPLE rule — three shared tokens with a product budget
+============================================================================================
+  df1*df2*df3 <= 1 * N^2                        440,695    53.0%    5.77
+  df1*df2*df3 <= 5 * N^2                        521,495    62.7%    6.83
+  df1*df2*df3 <= 20 * N^2                        565,354    68.0%    7.40
+  df1*df2*df3 <= 50 * N^2                        585,538    70.4%    7.67
+
+============================================================================================
+COMBINED: best realistic package
+============================================================================================
+  L8(N*50) OR L1 OR L2 OR L7                                745,746   89.7% of misses  -> + 9.76pp GT recall
+  implied uncapped union recall: 98.88%
+
+============================================================================================
+RESIDUE — misses none of the above reaches, by country/script
+============================================================================================
+  US                  44,168
+  India               39,500
+
+  residue with an EMPTY S2/S3 address: 55,941 of 83,668  (66.9%)
+
+done.
+EXIT=0
